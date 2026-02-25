@@ -2,20 +2,17 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# ======= 【1. 替换成你爬取的真实数据】 =======
-# 这里用你提供的单条数据作为示范，你实际用的时候，把 blibili_sracper.crawl_video_infos() 的结果赋值给 video_infos 即可
-video_infos = [
-    {'video_id': 'BV1CJExzgE4r', 'title': '没想到哪吒和敖丙...', 'desc': '-', 'pubdate': '2025-05-16 15:54:41',
-     'total_duration': 86, 'up_fans': 29242, 'view': 815357, 'like': 1083, 'danmaku': 185,
-     'favorite': 9907, 'share': 15, 'coin': 253, 'reply': 8},
-    # {'video_id': 'BV...', ...},
-    # 把你爬到的上百条数据放在这里
-]
+from data_scrape.video_id_crawl import BilibiliSearchScraper
+
+# ======= 【1. 替换你爬取的真实数据】 =======
+blibili_sracper = BilibiliSearchScraper("哪吒")
+video_ids = blibili_sracper.crawl_bvids()
+video_infos = blibili_sracper.crawl_video_infos(video_ids)
 
 # ======= 【2. 数据清洗与格式化】 =======
 df = pd.DataFrame(video_infos)
 
-# 确保所有的数字列都是数值类型（防止爬虫爬下来的是字符串）
+
 numeric_cols = ['view', 'like', 'danmaku', 'favorite', 'coin', 'share', 'reply', 'up_fans', 'total_duration']
 for col in numeric_cols:
     if col in df.columns:
